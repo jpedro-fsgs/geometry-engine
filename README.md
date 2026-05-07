@@ -2,6 +2,8 @@
 
 Um motor modular em C para cálculos geométricos 2D, com suporte a visualização em Python.
 
+**[Documentação Matemática (MATH.md)](docs/MATH.md)**
+
 ## Funcionalidades
 
 O motor suporta as seguintes entidades geométricas:
@@ -19,18 +21,27 @@ O motor suporta as seguintes entidades geométricas:
 
 ## Polimorfismo e Gerenciamento de Formas
 
-O motor implementa um conceito de **polimorfismo em C** para permitir que diferentes tipos de formas coexistam em uma mesma lista e interajam entre si. Isso é feito através de duas estruturas principais no `main.c`:
+O motor implementa um conceito de **polimorfismo em C** para permitir que diferentes tipos de formas coexistam em uma mesma lista e interajam entre si. Isso é feito através de duas estruturas principais no `src/main.c`:
 
 - **`ShapeType` (Enum):** Uma etiqueta que identifica o tipo real da forma (ex: `T_CIRCLE`, `T_POLY`).
 - **`ShapeContainer` (Struct):** Um "envelope" genérico que contém o tipo e um ponteiro `void* data` para a estrutura real.
 
-Este design permite que o motor percorra uma lista de formas variadas e decida em tempo de execução qual algoritmo de intersecção aplicar, tornando o sistema altamente extensível.
+Este design permite que o motor percorra uma lista de formas variadas e decida em tempo de execução qual algoritmo de intersecção aplicar, tornando o sistema altamente extensível e capaz de realizar testes dinâmicos entre quaisquer pares de objetos.
+
+## Estrutura do Projeto
+
+O projeto está organizado da seguinte forma:
+- `include/`: Arquivos de cabeçalho (`.h`).
+- `src/`: Arquivos fonte em C (`.c`).
+- `shapes.txt`: Arquivo de entrada na raiz.
+- `docs/`: Documentação detalhada (`MATH.md`).
+- `scripts/`: Scripts utilitários (visualização em Python).
+- `build/`: Pasta gerada para arquivos objeto (`.o`).
 
 ## Como Usar (C)
 
 ### No Linux / macOS
-O projeto utiliza um `Makefile` para automatizar a compilação.
-1. Abra o terminal na pasta do projeto.
+1. Abra o terminal na pasta raiz do projeto.
 2. Compile usando o comando:
    ```bash
    make
@@ -41,14 +52,12 @@ O projeto utiliza um `Makefile` para automatizar a compilação.
    ```
 
 ### No Windows
-Você precisará de um compilador C (como o **MinGW** ou **GCC via MSYS2**).
 1. Abra o CMD ou PowerShell na pasta do projeto.
-2. Se você tiver o `make` instalado (ex: via MinGW), basta rodar `make`.
-3. Caso contrário, compile manualmente com o comando:
+2. Compile manualmente com o comando:
    ```bash
-   gcc -o geo_engine.exe main.c point.c line.c polygon.c circle.c rectangle.c triangle.c operations.c -lm
+   gcc -o geo_engine.exe src/*.c -Iinclude -lm
    ```
-4. Execute o motor:
+3. Execute o motor:
    ```bash
    .\geo_engine.exe
    ```
@@ -57,35 +66,23 @@ Você precisará de um compilador C (como o **MinGW** ou **GCC via MSYS2**).
 
 ## Como Usar (Python)
 
-O script `visualize.py` permite visualizar as formas definidas no arquivo `shapes.txt`.
+O script de visualização permite ver as formas definidas no arquivo `shapes.txt`.
 
 ### Requisitos
 - Python 3 instalado.
-- Biblioteca Matplotlib instalada:
-  ```bash
-  pip install matplotlib
-  ```
+- Biblioteca Matplotlib instalada: `pip install matplotlib`
 
 ### Execução
-- **Linux/macOS:** `python3 visualize.py`
-- **Windows:** `python visualize.py` ou `py visualize.py`
+```bash
+python visualize.py
+```
 
 ## Formato do Arquivo `shapes.txt`
 
-Você pode definir a cena geométrica editando o arquivo `shapes.txt`. Cada linha representa uma forma:
-
-- **Ponto:** `POINT <x> <y>`
-- **Linha:** `LINE <x1> <y1> <x2> <y2>`
-- **Polígono:** `POLYGON <n_vertices> <x1> <y1> ... <xn> <yn>`
-- **Círculo:** `CIRCLE <x_centro> <y_centro> <raio>`
-- **Retângulo:** `RECTANGLE <x_min> <y_min> <x_max> <y_max>`
-- **Triângulo:** `TRIANGLE <x1> <y1> <x2> <y2> <x3> <y3>`
-
-## Estrutura do Projeto
-
-- `point.h/c`, `line.h/c`, `polygon.h/c`: Módulos básicos.
-- `circle.h/c`, `rectangle.h/c`, `triangle.h/c`: Módulos dedicados para formas específicas.
-- `operations.h/c`: Módulo central de cálculos de intersecção, inclusão e distâncias mistas.
-- `main.c`: Parser principal e motor de testes dinâmicos.
-- `visualize.py`: Script de visualização gráfica.
-- `Makefile`: Script de automação de build.
+Cada linha representa uma forma geométrica. Exemplos:
+- `POINT 0.0 0.0`
+- `LINE 0.0 0.0 3.0 4.0`
+- `POLYGON 4 0.0 0.0 3.0 0.0 3.0 4.0 0.0 4.0`
+- `CIRCLE 5.0 5.0 2.0`
+- `RECTANGLE 1.0 1.0 4.0 3.0`
+- `TRIANGLE 6.0 1.0 9.0 1.0 7.5 4.0`

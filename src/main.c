@@ -103,6 +103,9 @@ int main() {
                 } else if (s2.type == T_POLY) {
                     if (point_in_polygon(p, *(Polygon*)s2.data))
                         printf("Ponto (%.1f,%.1f) esta DENTRO do Poligono\n", p.x, p.y);
+                } else if (s2.type == T_TRI) {
+                    if (point_in_triangle(p, *(Triangle*)s2.data))
+                        printf("Ponto (%.1f,%.1f) esta DENTRO do Triangulo\n", p.x, p.y);
                 } else if (s2.type == T_LINE) {
                     double dist = distance_point_to_line(p, *(Line*)s2.data);
                     if (dist < 0.1) // Se estiver bem perto, consideramos que toca
@@ -114,11 +117,17 @@ int main() {
             if (s1.type == T_LINE) {
                 Line l1 = *(Line*)s1.data;
                 if (s2.type == T_LINE) {
-                    if (i < j && line_intersects(l1, *(Line*)s2.data)) // Evita duplicar log
+                    if (i < j && line_intersects(l1, *(Line*)s2.data))
                         printf("Linha INTERSECTA outra Linha\n");
                 } else if (s2.type == T_CIRCLE) {
                     if (line_intersects_circle(l1, *(Circle*)s2.data))
                         printf("Linha INTERSECTA Circulo em (%.1f,%.1f)\n", ((Circle*)s2.data)->center.x, ((Circle*)s2.data)->center.y);
+                } else if (s2.type == T_RECT) {
+                    if (line_intersects_rectangle(l1, *(Rectangle*)s2.data))
+                        printf("Linha INTERSECTA Retangulo\n");
+                } else if (s2.type == T_POLY) {
+                    if (line_intersects_polygon(l1, *(Polygon*)s2.data))
+                        printf("Linha INTERSECTA Poligono\n");
                 }
             }
 
@@ -131,13 +140,34 @@ int main() {
                 } else if (s2.type == T_RECT) {
                     if (circle_intersects_rectangle(c1, *(Rectangle*)s2.data))
                         printf("Circulo r=%.1f INTERSECTA Retangulo\n", c1.radius);
+                } else if (s2.type == T_TRI) {
+                    if (circle_intersects_triangle(c1, *(Triangle*)s2.data))
+                        printf("Circulo r=%.1f INTERSECTA Triangulo\n", c1.radius);
                 }
             }
 
             // 4. RETANGULO em outras formas
-            if (s1.type == T_RECT && s2.type == T_RECT) {
-                if (i < j && rectangle_intersects(*(Rectangle*)s1.data, *(Rectangle*)s2.data))
-                    printf("Retangulo INTERSECTA outro Retangulo\n");
+            if (s1.type == T_RECT) {
+                Rectangle r1 = *(Rectangle*)s1.data;
+                if (s2.type == T_RECT) {
+                    if (i < j && rectangle_intersects(r1, *(Rectangle*)s2.data))
+                        printf("Retangulo INTERSECTA outro Retangulo\n");
+                } else if (s2.type == T_TRI) {
+                    if (rectangle_intersects_triangle(r1, *(Triangle*)s2.data))
+                        printf("Retangulo INTERSECTA Triangulo\n");
+                }
+            }
+
+            // 5. POLIGONO em outras formas
+            if (s1.type == T_POLY) {
+                Polygon p1 = *(Polygon*)s1.data;
+                if (s2.type == T_CIRCLE) {
+                    if (polygon_intersects_circle(p1, *(Circle*)s2.data))
+                        printf("Poligono INTERSECTA Circulo r=%.1f\n", ((Circle*)s2.data)->radius);
+                } else if (s2.type == T_RECT) {
+                    if (polygon_intersects_rectangle(p1, *(Rectangle*)s2.data))
+                        printf("Poligono INTERSECTA Retangulo\n");
+                }
             }
         }
     }

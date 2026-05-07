@@ -5,6 +5,7 @@ def load_shapes(filename="shapes.txt"):
     """
     Carrega as formas geométricas de um arquivo texto.
     """
+
     points = []
     lines = []
     polygons = []
