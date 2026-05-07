@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 LDFLAGS = -lm
 
-OBJ = main.o point.o line.o polygon.o circle.o rectangle.o triangle.o
+OBJ = main.o point.o line.o polygon.o circle.o rectangle.o triangle.o operations.o
 TARGET = geo_engine
 
 all: $(TARGET)

@@ -12,7 +12,19 @@ O motor suporta as seguintes entidades geométricas:
 - **Retângulos (RECTANGLE):** Alinhados aos eixos (AABB).
 - **Triângulos (TRIANGLE):** Definidos por três pontos.
 
-Cálculos incluídos: área, perímetro, comprimento e distâncias.
+### Operações Suportadas
+- **Cálculos Básicos:** Área, perímetro, comprimento e distâncias.
+- **Interseções:** Verificação de colisões entre Círculos, Linhas e Retângulos.
+- **Inclusão:** Verificação de ponto dentro de Círculo, Retângulo e Polígono (via Raycasting).
+
+## Polimorfismo e Gerenciamento de Formas
+
+O motor implementa um conceito de **polimorfismo em C** para permitir que diferentes tipos de formas coexistam em uma mesma lista e interajam entre si. Isso é feito através de duas estruturas principais no `main.c`:
+
+- **`ShapeType` (Enum):** Uma etiqueta que identifica o tipo real da forma (ex: `T_CIRCLE`, `T_POLY`).
+- **`ShapeContainer` (Struct):** Um "envelope" genérico que contém o tipo e um ponteiro `void* data` para a estrutura real.
+
+Este design permite que o motor percorra uma lista de formas variadas e decida em tempo de execução qual algoritmo de intersecção aplicar, tornando o sistema altamente extensível.
 
 ## Como Usar (C)
 
@@ -34,7 +46,7 @@ Você precisará de um compilador C (como o **MinGW** ou **GCC via MSYS2**).
 2. Se você tiver o `make` instalado (ex: via MinGW), basta rodar `make`.
 3. Caso contrário, compile manualmente com o comando:
    ```bash
-   gcc -o geo_engine.exe main.c point.c line.c polygon.c circle.c rectangle.c triangle.c -lm
+   gcc -o geo_engine.exe main.c point.c line.c polygon.c circle.c rectangle.c triangle.c operations.c -lm
    ```
 4. Execute o motor:
    ```bash
@@ -72,7 +84,8 @@ Você pode definir a cena geométrica editando o arquivo `shapes.txt`. Cada linh
 ## Estrutura do Projeto
 
 - `point.h/c`, `line.h/c`, `polygon.h/c`: Módulos básicos.
-- `circle.h/c`, `rectangle.h/c`, `triangle.h/c`: Módulos dedicados.
-- `main.c`: Parser e execução principal.
-- `visualize.py`: Script de visualização.
-- `Makefile`: Script de compilação.
+- `circle.h/c`, `rectangle.h/c`, `triangle.h/c`: Módulos dedicados para formas específicas.
+- `operations.h/c`: Módulo central de cálculos de intersecção, inclusão e distâncias mistas.
+- `main.c`: Parser principal e motor de testes dinâmicos.
+- `visualize.py`: Script de visualização gráfica.
+- `Makefile`: Script de automação de build.
