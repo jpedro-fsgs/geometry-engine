@@ -64,6 +64,42 @@ O projeto está organizado da seguinte forma:
 
 ---
 
+## Como Usar (Java)
+
+A versão em Java fica na pasta `Java/` e produz **exatamente a mesma saída** da versão em C. Todos os comandos devem ser executados na **pasta raiz do projeto** (onde está o `shapes.txt`).
+
+> Requisito: **JDK 11 ou superior** instalado (`java -version`).
+
+### No Linux / macOS
+1. Abra o terminal na pasta raiz do projeto.
+2. Compile e execute usando o comando:
+   ```bash
+   make -C Java run
+   ```
+3. Para apenas compilar (gera `Java/out/`):
+   ```bash
+   make -C Java
+   ```
+
+Alternativa sem `make`:
+```bash
+javac -d Java/out $(find Java/src -name '*.java')
+java -cp Java/out geo.app.Main
+```
+
+### No Windows
+1. Abra o CMD ou PowerShell na pasta raiz do projeto.
+2. Compile manualmente com o comando:
+   ```bash
+   javac -d Java\out Java\src\main\java\geo\model\*.java Java\src\main\java\geo\operations\*.java Java\src\main\java\geo\app\*.java
+   ```
+3. Execute o motor:
+   ```bash
+   java -cp Java\out geo.app.Main
+   ```
+
+---
+
 ## Como Usar (Python)
 
 O script de visualização permite ver as formas definidas no arquivo `shapes.txt`.
