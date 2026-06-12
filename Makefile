@@ -1,25 +1,22 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -Iinclude
-LDFLAGS = -lm
+# Makefile Principal do Repositório
 
-SRC_DIR = src
-OBJ_DIR = build
-TARGET = geo_engine
+.PHONY: all clean run-c run-java
 
-# Lista manual de objetos para garantir ordem e controle
-OBJ = $(OBJ_DIR)/main.o $(OBJ_DIR)/point.o $(OBJ_DIR)/line.o $(OBJ_DIR)/polygon.o \
-      $(OBJ_DIR)/circle.o $(OBJ_DIR)/rectangle.o $(OBJ_DIR)/triangle.o $(OBJ_DIR)/operations.o
+all:
+	@echo "Compilando módulo em C..."
+	$(MAKE) -C C
+	@echo "Compilando módulo em Java..."
+	$(MAKE) -C Java
 
-all: $(OBJ_DIR) $(TARGET)
+run-c:
+	@echo "Executando implementação em C..."
+	$(MAKE) -C C run
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
-
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+run-java:
+	@echo "Executando implementação em Java..."
+	$(MAKE) -C Java run
 
 clean:
-	rm -rf $(OBJ_DIR) $(TARGET)
+	@echo "Limpando arquivos gerados..."
+	$(MAKE) -C C clean
+	$(MAKE) -C Java clean

@@ -3,6 +3,10 @@
 geo_engine
 geo_engine.exe
 
+# Compilação Java
+*.class
+Java/out/
+
 # Python
 __pycache__/
 *.py[cod]
