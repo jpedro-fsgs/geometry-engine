@@ -48,15 +48,20 @@ domínio é o núcleo estável e os detalhes (IO) ficam na borda.
 Requer **JDK 11+** (usa `java.util.List.copyOf`). Os comandos lêem o
 `shapes.txt` da **raiz do projeto**.
 
-### Opção 1 — via Makefile (recomendada)
+### Opção 1 — via Makefile Raiz (Recomendada)
+A partir da raiz do repositório:
+```bash
+make run-java
+```
 
+### Opção 2 — via Makefile local
 ```bash
 make -C Java run      # compila e executa (a partir da raiz)
 make -C Java          # apenas compila (gera Java/out/)
 make -C Java clean    # remove os .class
 ```
 
-### Opção 2 — javac/java direto (a partir da raiz do projeto)
+### Opção 3 — javac/java direto (a partir da raiz do projeto)
 
 ```bash
 # Compila todas as fontes para Java/out

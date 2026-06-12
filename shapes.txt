@@ -1,10 +1,8 @@
 # Adicionando formas para testes de intersecção
-POINT 7.0 2.0
+POINT 7.0 3.0
 POINT 5.0 2.0
 LINE 0.0 0.0 3.0 4.0
 POLYGON 4 1.0 1.0 3.0 0.0 3.5 5.5 0.0 4.0
 CIRCLE 5.0 5.0 2.0
 RECTANGLE 1.0 1.0 4.0 3.0
 TRIANGLE 6.0 1.0 9.0 1.0 7.5 4.0
-
-

@@ -1,124 +1,70 @@
 # Motor de Cálculos Geométricos
 
-Um motor modular em C para cálculos geométricos 2D, com suporte a visualização em Python.
+Um projeto de motor geométrico 2D modular, implementado em múltiplos paradigmas de programação. Este repositório explora a comparação entre a abordagem **Procedural/Estruturada (Linguagem C)** e a **Orientada a Objetos (Linguagem Java)**, produzindo *exatamente os mesmos resultados matemáticos*. Também conta com um visualizador em **Python**.
 
 **[Documentação Matemática (MATH.md)](docs/MATH.md)**
 
-## Funcionalidades
+## Estrutura do Repositório
 
-O motor suporta as seguintes entidades geométricas:
+Para facilitar o estudo e a modularidade, o projeto está dividido em pastas independentes para cada linguagem:
+
+- **`C/`**: Implementação baseada em structs, ponteiros e alocação manual de memória. (Ver [C/README.md](C/README.md))
+- **`Java/`**: Implementação baseada em classes, herança, imutabilidade e polimorfismo dinâmico. (Ver [Java/README.md](Java/README.md))
+- **`docs/`**: Documentação das fórmulas matemáticas.
+- **`visualize.py`**: Script Python para visualização visual das formas.
+- **`shapes.txt`**: O arquivo de configuração principal, lido por ambos os motores (C e Java) para instanciar as formas geométricas.
+
+## Funcionalidades e Entidades
+
+O motor suporta:
 - **Pontos (POINT):** Coordenadas X e Y.
-- **Linhas (LINE):** Definidas por dois pontos.
-- **Polígonos (POLYGON):** Sequência de vértices (array dinâmico).
+- **Linhas (LINE):** Segmentos de reta definidos por dois pontos.
+- **Polígonos (POLYGON):** Sequência dinâmica de vértices.
 - **Círculos (CIRCLE):** Centro e raio (matemática exata).
 - **Retângulos (RECTANGLE):** Alinhados aos eixos (AABB).
 - **Triângulos (TRIANGLE):** Definidos por três pontos.
 
-### Operações Suportadas
-- **Cálculos Básicos:** Área, perímetro, comprimento e distâncias.
-- **Interseções:** Verificação de colisões entre Círculos, Linhas e Retângulos.
-- **Inclusão:** Verificação de ponto dentro de Círculo, Retângulo e Polígono (via Raycasting).
+As **operações geométricas** incluem o cálculo de distâncias, cálculo de área e perímetro, checagem de interseção (colisão) entre as mais variadas formas, e teste de inclusão (Raycasting e áreas).
 
-## Polimorfismo e Gerenciamento de Formas
+## Como Executar
 
-O motor implementa um conceito de **polimorfismo em C** para permitir que diferentes tipos de formas coexistam em uma mesma lista e interajam entre si. Isso é feito através de duas estruturas principais no `src/main.c`:
+O repositório possui um `Makefile` unificado na raiz para facilitar a execução dos módulos.
 
-- **`ShapeType` (Enum):** Uma etiqueta que identifica o tipo real da forma (ex: `T_CIRCLE`, `T_POLY`).
-- **`ShapeContainer` (Struct):** Um "envelope" genérico que contém o tipo e um ponteiro `void* data` para a estrutura real.
-
-Este design permite que o motor percorra uma lista de formas variadas e decida em tempo de execução qual algoritmo de intersecção aplicar, tornando o sistema altamente extensível e capaz de realizar testes dinâmicos entre quaisquer pares de objetos.
-
-## Estrutura do Projeto
-
-O projeto está organizado da seguinte forma:
-- `include/`: Arquivos de cabeçalho (`.h`).
-- `src/`: Arquivos fonte em C (`.c`).
-- `shapes.txt`: Arquivo de entrada na raiz.
-- `docs/`: Documentação detalhada (`MATH.md`).
-- `scripts/`: Scripts utilitários (visualização em Python).
-- `build/`: Pasta gerada para arquivos objeto (`.o`).
-
-## Como Usar (C)
-
-### No Linux / macOS
-1. Abra o terminal na pasta raiz do projeto.
-2. Compile usando o comando:
-   ```bash
-   make
-   ```
-3. Execute o motor:
-   ```bash
-   ./geo_engine
-   ```
-
-### No Windows
-1. Abra o CMD ou PowerShell na pasta do projeto.
-2. Compile manualmente com o comando:
-   ```bash
-   gcc -o geo_engine.exe src/*.c -Iinclude -lm
-   ```
-3. Execute o motor:
-   ```bash
-   .\geo_engine.exe
-   ```
-
----
-
-## Como Usar (Java)
-
-A versão em Java fica na pasta `Java/` e produz **exatamente a mesma saída** da versão em C. Todos os comandos devem ser executados na **pasta raiz do projeto** (onde está o `shapes.txt`).
-
-> Requisito: **JDK 11 ou superior** instalado (`java -version`).
-
-### No Linux / macOS
-1. Abra o terminal na pasta raiz do projeto.
-2. Compile e execute usando o comando:
-   ```bash
-   make -C Java run
-   ```
-3. Para apenas compilar (gera `Java/out/`):
-   ```bash
-   make -C Java
-   ```
-
-Alternativa sem `make`:
+### Executando o Módulo C
 ```bash
-javac -d Java/out $(find Java/src -name '*.java')
-java -cp Java/out geo.app.Main
+make run-c
 ```
 
-### No Windows
-1. Abra o CMD ou PowerShell na pasta raiz do projeto.
-2. Compile manualmente com o comando:
-   ```bash
-   javac -d Java\out Java\src\main\java\geo\model\*.java Java\src\main\java\geo\operations\*.java Java\src\main\java\geo\app\*.java
-   ```
-3. Execute o motor:
-   ```bash
-   java -cp Java\out geo.app.Main
-   ```
+### Executando o Módulo Java
+Requisito: JDK 11 ou superior.
+```bash
+make run-java
+```
+
+### Limpando o Projeto
+Para apagar os binários e arquivos `.class` de ambas as pastas:
+```bash
+make clean
+```
 
 ---
-
-## Como Usar (Python)
-
-O script de visualização permite ver as formas definidas no arquivo `shapes.txt`.
-
-### Requisitos
-- Python 3 instalado.
-- Biblioteca Matplotlib instalada: `pip install matplotlib`
-
-### Execução
-```bash
-python visualize.py
-```
 
 ## Formato do Arquivo `shapes.txt`
 
-Cada linha representa uma forma geométrica. Exemplos:
+Cada linha representa uma forma geométrica. É assim que o motor sabe o que carregar. Exemplos:
 - `POINT 0.0 0.0`
 - `LINE 0.0 0.0 3.0 4.0`
 - `POLYGON 4 0.0 0.0 3.0 0.0 3.0 4.0 0.0 4.0`
 - `CIRCLE 5.0 5.0 2.0`
 - `RECTANGLE 1.0 1.0 4.0 3.0`
 - `TRIANGLE 6.0 1.0 9.0 1.0 7.5 4.0`
+
+## Visualização em Python
+
+O repositório acompanha um script que usa `matplotlib` para renderizar o que está no arquivo `shapes.txt`.
+**Requisitos:** Python 3 e `matplotlib` (`pip install matplotlib`).
+
+```bash
+python visualize.py
+```
+

@@ -18,10 +18,11 @@ typedef struct {
     void* data;
 } ShapeContainer;
 
-int main() {
-    FILE *file = fopen("shapes.txt", "r");
+int main(int argc, char *argv[]) {
+    const char *filename = (argc > 1) ? argv[1] : "shapes.txt";
+    FILE *file = fopen(filename, "r");
     if (!file) {
-        perror("Error opening shapes.txt");
+        perror("Error opening file");
         return 1;
     }
 
