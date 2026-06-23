@@ -1,6 +1,6 @@
 # Makefile Principal do Repositório
 
-.PHONY: all clean run-c run-java
+.PHONY: all clean run-c run-java bench-c bench-java bench
 
 all:
 	@echo "Compilando módulo em C..."
@@ -16,7 +16,16 @@ run-java:
 	@echo "Executando implementação em Java..."
 	$(MAKE) -C Java run
 
+bench-c:
+	$(MAKE) -C C bench
+
+bench-java:
+	$(MAKE) -C Java bench
+
+bench: bench-c bench-java
+
 clean:
 	@echo "Limpando arquivos gerados..."
 	$(MAKE) -C C clean
 	$(MAKE) -C Java clean
+

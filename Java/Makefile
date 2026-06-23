@@ -34,7 +34,13 @@ $(STAMP): $(SOURCES)
 run: $(STAMP)
 	cd .. && $(JAVA) -cp Java/$(OUT_DIR) $(MAIN)
 
+bench: $(STAMP)
+	@echo "=== Benchmark Java ==="
+	@cd .. && bash -c 'time $(JAVA) -cp Java/$(OUT_DIR) $(MAIN)'
+	@echo ""
+
 clean:
 	rm -rf $(OUT_DIR)
 
-.PHONY: all run clean
+.PHONY: all run bench clean
+

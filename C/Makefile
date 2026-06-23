@@ -24,7 +24,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 run: all
 	cd .. && ./C/$(TARGET)
 
+bench: all
+	@echo "=== Benchmark C ==="
+	@cd .. && bash -c 'time ./C/$(TARGET)'
+	@echo ""
+
 clean:
 	rm -rf $(OBJ_DIR) $(TARGET)
 
-.PHONY: all run clean
+.PHONY: all run bench clean
+
