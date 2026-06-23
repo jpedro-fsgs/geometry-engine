@@ -1,5 +1,7 @@
 package geo.model;
 
+import geo.operations.Operations;
+
 /**
  * Retângulo alinhado aos eixos (AABB), definido pelos cantos mínimo e máximo.
  *
@@ -47,4 +49,47 @@ public final class Rectangle extends Shape {
     public String typeName() {
         return "RECTANGLE";
     }
+
+    // ---- Double Dispatch ----
+
+    @Override
+    public String describe() {
+        return "Retangulo";
+    }
+
+    @Override
+    public boolean intersects(Shape other) {
+        return other.intersectWith(this);
+    }
+
+    @Override
+    public boolean intersectWith(Point p) {
+        return Operations.pointInRectangle(p, this);
+    }
+
+    @Override
+    public boolean intersectWith(Line l) {
+        return Operations.lineIntersectsRectangle(l, this);
+    }
+
+    @Override
+    public boolean intersectWith(Circle c) {
+        return Operations.circleIntersectsRectangle(c, this);
+    }
+
+    @Override
+    public boolean intersectWith(Rectangle r) {
+        return Operations.rectangleIntersects(this, r);
+    }
+
+    @Override
+    public boolean intersectWith(Triangle t) {
+        return Operations.rectangleIntersectsTriangle(this, t);
+    }
+
+    @Override
+    public boolean intersectWith(Polygon poly) {
+        return Operations.polygonIntersectsRectangle(poly, this);
+    }
 }
+

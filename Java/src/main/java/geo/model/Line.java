@@ -1,5 +1,7 @@
 package geo.model;
 
+import geo.operations.Operations;
+
 /**
  * Segmento de reta definido por dois pontos.
  *
@@ -46,4 +48,47 @@ public final class Line extends Shape {
     public String typeName() {
         return "LINE";
     }
+
+    // ---- Double Dispatch ----
+
+    @Override
+    public String describe() {
+        return "Linha";
+    }
+
+    @Override
+    public boolean intersects(Shape other) {
+        return other.intersectWith(this);
+    }
+
+    @Override
+    public boolean intersectWith(Point p) {
+        return Operations.distancePointToLine(p, this) <= 0.1;
+    }
+
+    @Override
+    public boolean intersectWith(Line l) {
+        return Operations.lineIntersects(this, l);
+    }
+
+    @Override
+    public boolean intersectWith(Circle c) {
+        return Operations.lineIntersectsCircle(this, c);
+    }
+
+    @Override
+    public boolean intersectWith(Rectangle r) {
+        return Operations.lineIntersectsRectangle(this, r);
+    }
+
+    @Override
+    public boolean intersectWith(Triangle t) {
+        return Operations.lineIntersectsTriangle(this, t);
+    }
+
+    @Override
+    public boolean intersectWith(Polygon poly) {
+        return Operations.lineIntersectsPolygon(this, poly);
+    }
 }
+

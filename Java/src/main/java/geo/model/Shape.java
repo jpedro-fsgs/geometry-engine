@@ -32,4 +32,40 @@ public abstract class Shape {
 
     /** Nome do tipo, usado para mensagens e depuração. */
     public abstract String typeName();
+
+    // ---- Autodescrição polimórfica ----
+
+    /** Descrição resumida para mensagens (ex: "Circulo (5.0,5.0 r=3.0)"). */
+    public abstract String describe();
+
+    // ---- Double Dispatch: despacho primário ----
+
+    /**
+     * Testa interseção/inclusão com qualquer outra {@code Shape}.
+     *
+     * <p>Cada subclasse implementa este método como
+     * {@code return other.intersectWith(this);}, iniciando o segundo despacho
+     * dinâmico que resolve o tipo real do parâmetro {@code other}.</p>
+     */
+    public abstract boolean intersects(Shape other);
+
+    // ---- Double Dispatch: despachos secundários ----
+
+    /** Interseção quando a outra forma é um {@link Point}. */
+    public abstract boolean intersectWith(Point p);
+
+    /** Interseção quando a outra forma é uma {@link Line}. */
+    public abstract boolean intersectWith(Line l);
+
+    /** Interseção quando a outra forma é um {@link Circle}. */
+    public abstract boolean intersectWith(Circle c);
+
+    /** Interseção quando a outra forma é um {@link Rectangle}. */
+    public abstract boolean intersectWith(Rectangle r);
+
+    /** Interseção quando a outra forma é um {@link Triangle}. */
+    public abstract boolean intersectWith(Triangle t);
+
+    /** Interseção quando a outra forma é um {@link Polygon}. */
+    public abstract boolean intersectWith(Polygon poly);
 }

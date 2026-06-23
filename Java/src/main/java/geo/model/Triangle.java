@@ -1,5 +1,7 @@
 package geo.model;
 
+import geo.operations.Operations;
+
 /**
  * Triângulo definido por três pontos.
  *
@@ -49,4 +51,47 @@ public final class Triangle extends Shape {
     public String typeName() {
         return "TRIANGLE";
     }
+
+    // ---- Double Dispatch ----
+
+    @Override
+    public String describe() {
+        return "Triangulo";
+    }
+
+    @Override
+    public boolean intersects(Shape other) {
+        return other.intersectWith(this);
+    }
+
+    @Override
+    public boolean intersectWith(Point p) {
+        return Operations.pointInTriangle(p, this);
+    }
+
+    @Override
+    public boolean intersectWith(Line l) {
+        return Operations.lineIntersectsTriangle(l, this);
+    }
+
+    @Override
+    public boolean intersectWith(Circle c) {
+        return Operations.circleIntersectsTriangle(c, this);
+    }
+
+    @Override
+    public boolean intersectWith(Rectangle r) {
+        return Operations.rectangleIntersectsTriangle(r, this);
+    }
+
+    @Override
+    public boolean intersectWith(Triangle t) {
+        return false; // Não implementado no projeto original.
+    }
+
+    @Override
+    public boolean intersectWith(Polygon poly) {
+        return false; // Não implementado no projeto original.
+    }
 }
+

@@ -7,7 +7,7 @@ import geo.model.Polygon;
 import geo.model.Rectangle;
 import geo.model.Shape;
 import geo.model.Triangle;
-import geo.operations.Operations;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -131,9 +131,13 @@ public final class Main {
     }
 
     /**
-     * Reproduz o duplo laço de testes de {@code main.c}. A ordem de iteração
-     * (i, j) e as guardas {@code i < j} para formas simétricas são mantidas
-     * idênticas para que a saída coincida linha a linha com a versão C.
+     * Reproduz o duplo laço de testes de {@code main.c}.
+     *
+     * <p>Após a refatoração com <b>Double Dispatch</b>, este método trabalha
+     * exclusivamente com a abstração {@link Shape}. Não há nenhum
+     * {@code instanceof}, nenhum cast manual e nenhum import de subclasses
+     * concretas. O despacho dinâmico da JVM resolve os tipos reais de ambos
+     * os operandos em tempo de execução.</p>
      */
     private static void runDynamicTests(List<Shape> shapes) {
         System.out.println();
@@ -141,117 +145,15 @@ public final class Main {
 
         int n = shapes.size();
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == j) continue; // Não testar contra si mesmo
-
+            for (int j = i + 1; j < n; j++) {
                 Shape s1 = shapes.get(i);
                 Shape s2 = shapes.get(j);
 
-                // 1. PONTO em outras formas
-                if (s1 instanceof Point) {
-                    Point p = (Point) s1;
-                    if (s2 instanceof Circle) {
-                        Circle c = (Circle) s2;
-                        if (Operations.pointInCircle(p, c)) {
-                            System.out.printf(US, "Ponto (%.1f,%.1f) esta DENTRO do Circulo r=%.1f%n",
-                                    p.getX(), p.getY(), c.getRadius());
-                        }
-                    } else if (s2 instanceof Rectangle) {
-                        if (Operations.pointInRectangle(p, (Rectangle) s2)) {
-                            System.out.printf(US, "Ponto (%.1f,%.1f) esta DENTRO do Retangulo%n",
-                                    p.getX(), p.getY());
-                        }
-                    } else if (s2 instanceof Polygon) {
-                        if (Operations.pointInPolygon(p, (Polygon) s2)) {
-                            System.out.printf(US, "Ponto (%.1f,%.1f) esta DENTRO do Poligono%n",
-                                    p.getX(), p.getY());
-                        }
-                    } else if (s2 instanceof Triangle) {
-                        if (Operations.pointInTriangle(p, (Triangle) s2)) {
-                            System.out.printf(US, "Ponto (%.1f,%.1f) esta DENTRO do Triangulo%n",
-                                    p.getX(), p.getY());
-                        }
-                    } else if (s2 instanceof Line) {
-                        double dist = Operations.distancePointToLine(p, (Line) s2);
-                        if (dist < 0.1) {
-                            System.out.printf(US, "Ponto (%.1f,%.1f) TOCA a Linha (dist=%.2f)%n",
-                                    p.getX(), p.getY(), dist);
-                        }
-                    }
-                }
-
-                // 2. LINHA em outras formas
-                if (s1 instanceof Line) {
-                    Line l1 = (Line) s1;
-                    if (s2 instanceof Line) {
-                        if (i < j && Operations.lineIntersects(l1, (Line) s2)) {
-                            System.out.println("Linha INTERSECTA outra Linha");
-                        }
-                    } else if (s2 instanceof Circle) {
-                        Circle c = (Circle) s2;
-                        if (Operations.lineIntersectsCircle(l1, c)) {
-                            System.out.printf(US, "Linha INTERSECTA Circulo em (%.1f,%.1f)%n",
-                                    c.getCenter().getX(), c.getCenter().getY());
-                        }
-                    } else if (s2 instanceof Rectangle) {
-                        if (Operations.lineIntersectsRectangle(l1, (Rectangle) s2)) {
-                            System.out.println("Linha INTERSECTA Retangulo");
-                        }
-                    } else if (s2 instanceof Polygon) {
-                        if (Operations.lineIntersectsPolygon(l1, (Polygon) s2)) {
-                            System.out.println("Linha INTERSECTA Poligono");
-                        }
-                    }
-                }
-
-                // 3. CIRCULO em outras formas
-                if (s1 instanceof Circle) {
-                    Circle c1 = (Circle) s1;
-                    if (s2 instanceof Circle) {
-                        if (i < j && Operations.circleIntersects(c1, (Circle) s2)) {
-                            System.out.printf(US, "Circulo em (%.1f,%.1f) INTERSECTA outro Circulo%n",
-                                    c1.getCenter().getX(), c1.getCenter().getY());
-                        }
-                    } else if (s2 instanceof Rectangle) {
-                        if (Operations.circleIntersectsRectangle(c1, (Rectangle) s2)) {
-                            System.out.printf(US, "Circulo r=%.1f INTERSECTA Retangulo%n", c1.getRadius());
-                        }
-                    } else if (s2 instanceof Triangle) {
-                        if (Operations.circleIntersectsTriangle(c1, (Triangle) s2)) {
-                            System.out.printf(US, "Circulo r=%.1f INTERSECTA Triangulo%n", c1.getRadius());
-                        }
-                    }
-                }
-
-                // 4. RETANGULO em outras formas
-                if (s1 instanceof Rectangle) {
-                    Rectangle r1 = (Rectangle) s1;
-                    if (s2 instanceof Rectangle) {
-                        if (i < j && Operations.rectangleIntersects(r1, (Rectangle) s2)) {
-                            System.out.println("Retangulo INTERSECTA outro Retangulo");
-                        }
-                    } else if (s2 instanceof Triangle) {
-                        if (Operations.rectangleIntersectsTriangle(r1, (Triangle) s2)) {
-                            System.out.println("Retangulo INTERSECTA Triangulo");
-                        }
-                    }
-                }
-
-                // 5. POLIGONO em outras formas
-                if (s1 instanceof Polygon) {
-                    Polygon p1 = (Polygon) s1;
-                    if (s2 instanceof Circle) {
-                        Circle c = (Circle) s2;
-                        if (Operations.polygonIntersectsCircle(p1, c)) {
-                            System.out.printf(US, "Poligono INTERSECTA Circulo r=%.1f%n", c.getRadius());
-                        }
-                    } else if (s2 instanceof Rectangle) {
-                        if (Operations.polygonIntersectsRectangle(p1, (Rectangle) s2)) {
-                            System.out.println("Poligono INTERSECTA Retangulo");
-                        }
-                    }
+                if (s1.intersects(s2)) {
+                    System.out.println(s1.describe() + " INTERSECTA " + s2.describe());
                 }
             }
         }
     }
 }
+

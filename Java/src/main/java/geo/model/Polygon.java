@@ -1,5 +1,7 @@
 package geo.model;
 
+import geo.operations.Operations;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -64,4 +66,47 @@ public final class Polygon extends Shape {
     public String typeName() {
         return "POLYGON";
     }
+
+    // ---- Double Dispatch ----
+
+    @Override
+    public String describe() {
+        return "Poligono";
+    }
+
+    @Override
+    public boolean intersects(Shape other) {
+        return other.intersectWith(this);
+    }
+
+    @Override
+    public boolean intersectWith(Point p) {
+        return Operations.pointInPolygon(p, this);
+    }
+
+    @Override
+    public boolean intersectWith(Line l) {
+        return Operations.lineIntersectsPolygon(l, this);
+    }
+
+    @Override
+    public boolean intersectWith(Circle c) {
+        return Operations.polygonIntersectsCircle(this, c);
+    }
+
+    @Override
+    public boolean intersectWith(Rectangle r) {
+        return Operations.polygonIntersectsRectangle(this, r);
+    }
+
+    @Override
+    public boolean intersectWith(Triangle t) {
+        return false; // Não implementado no projeto original.
+    }
+
+    @Override
+    public boolean intersectWith(Polygon poly) {
+        return false; // Não implementado no projeto original.
+    }
 }
+

@@ -1,5 +1,9 @@
 package geo.model;
 
+import geo.operations.Operations;
+
+import java.util.Locale;
+
 /**
  * Círculo definido por centro e raio (matemática exata).
  *
@@ -40,4 +44,48 @@ public final class Circle extends Shape {
     public String typeName() {
         return "CIRCLE";
     }
+
+    // ---- Double Dispatch ----
+
+    @Override
+    public String describe() {
+        return String.format(Locale.US, "Circulo (%.1f,%.1f r=%.1f)",
+                center.getX(), center.getY(), radius);
+    }
+
+    @Override
+    public boolean intersects(Shape other) {
+        return other.intersectWith(this);
+    }
+
+    @Override
+    public boolean intersectWith(Point p) {
+        return Operations.pointInCircle(p, this);
+    }
+
+    @Override
+    public boolean intersectWith(Line l) {
+        return Operations.lineIntersectsCircle(l, this);
+    }
+
+    @Override
+    public boolean intersectWith(Circle c) {
+        return Operations.circleIntersects(this, c);
+    }
+
+    @Override
+    public boolean intersectWith(Rectangle r) {
+        return Operations.circleIntersectsRectangle(this, r);
+    }
+
+    @Override
+    public boolean intersectWith(Triangle t) {
+        return Operations.circleIntersectsTriangle(this, t);
+    }
+
+    @Override
+    public boolean intersectWith(Polygon poly) {
+        return Operations.polygonIntersectsCircle(poly, this);
+    }
 }
+
